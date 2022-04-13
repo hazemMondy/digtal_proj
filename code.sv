@@ -1,22 +1,34 @@
+// test module with x defalut value = 0
+// default value for port is 0
+module test {
+    export var x = 0;
+    export function foo() {
+        return x;
+    }
+}
+
+
 module CounterModule (
-    clk,
-    control,
-    initialValue,
-    INIT
+    input clk,
+    input control,
+    input initialValue,
+    input INIT
 );
-    //*rst
     input clk, initialValue, INIT, control;
     
-    int const counterSize = 2;
-    typedef bit [counterSize:0] counter_t;
+    parameter int const counterSize = 2;
+    typedef bit [counterSize -1:0] counter_t;
 
     reg clk;
+    // default value is 0
+
 
     bit [1:0] control;
     // reg [7:0] initialValue;
+    
     counter_t initialValue;
-
-
+    // *default value is 0
+    counter_t counter =initialValue;
 
 
     bit WINNER = 1'b0;
@@ -28,10 +40,6 @@ module CounterModule (
     bit [3:0] counterLosser = 4'b0000;
 
     // * signal holder
-    bit rst = 1'b0;
+    bit semaphore = 1'b0;
 
-
-
-
-    
 endmodule
