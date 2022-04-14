@@ -6,6 +6,8 @@ module CounterModule (
      INIT,
      rst,
 );
+
+    //* declaration section
     input clk, initialValue, INIT, control;
     input rst;
 
@@ -34,6 +36,7 @@ module CounterModule (
 
     // * for initial counter value
     bit semaphore = 1'b0;
+    // * for winner and loser
     bit semaphoreSignal = 1'b1;
     bit semaphoreGame = 1'b1;
 
@@ -118,7 +121,6 @@ module CounterModule (
     end
 
     // TODO: if gameOver == 1'b1 reset all
-    // ! neg
   always @(posedge clk) begin
         if (GAMEOVER == 1'b1) begin
             multiCounter = 0;
