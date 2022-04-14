@@ -10,7 +10,7 @@ module CounterModule (
     input rst;
 
     // constants
-    parameter int counterSize = 4;
+    parameter int counterSize = 2;
     parameter int maxScore = 15;
     typedef bit [counterSize -1:0] multiCounter_t;
 
@@ -33,7 +33,7 @@ module CounterModule (
     bit [3:0] counterLosser = 4'b0000;
 
     // * for initial counter value
-    bit semaphore = 1'b1;
+    bit semaphore = 1'b0;
     bit semaphoreSignal = 1'b1;
     bit semaphoreGame = 1'b1;
 
@@ -90,7 +90,7 @@ module CounterModule (
 
     // TODO: signals semaphore
     always @(posedge clk) begin
-        if (semaphoreSignal == 1) begin
+        if (semaphoreSignal) begin
             WINNER = 1'b0;
             LOSER = 1'b0;
             WHO = 2'b00;
@@ -119,7 +119,7 @@ module CounterModule (
 
     // TODO: if gameOver == 1'b1 reset all
     // ! neg
-    always @(posedge clk) begin
+  always @(posedge clk) begin
         if (GAMEOVER == 1'b1) begin
             multiCounter = 0;
             WINNER = 1'b0;
@@ -163,8 +163,8 @@ module CounterModule (
     // end
 
     // TODO: rst signal
-    always @(negedge rst) begin
-        multiCounter = 0;
+  always @(negedge rst) begin
+    	multiCounter = 0;
         counterWinner = 0;
         counterLosser = 0;
         GAMEOVER = 1'b0;
