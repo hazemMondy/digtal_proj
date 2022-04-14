@@ -1,4 +1,3 @@
-
 module CounterModule (
      clk,
      control,
@@ -16,7 +15,6 @@ module CounterModule (
     parameter int maxScore = 15;
     typedef bit [counterSize -1:0] multiCounter_t;
 
-
     reg clk;
   	reg rst;
     bit [1:0] control;
@@ -24,7 +22,6 @@ module CounterModule (
     multiCounter_t initialValue;
     // *default value is 0
     multiCounter_t multiCounter =0;
-
 
     bit WINNER = 1'b0;
     bit LOSER = 1'b0;
@@ -47,7 +44,6 @@ module CounterModule (
         multiCounter = initialValue;
         end
     end
-
 
     // TODO: init the copunter to initialValue
     always @(posedge clk) begin
@@ -234,8 +230,6 @@ module test (
     $dumpfile("testOut.vcd");
     $dumpvars;
     #1000 $finish;
-
-
   end
 
   CounterModule Counter (
@@ -263,8 +257,6 @@ module test3 (
   parameter counterSize = 2;
   typedef bit [counterSize - 1 : 0] multiCounter_t;
 
-
-
   bit init;
   reg clk;
   multiCounter_t initialValue;  // initial value for counter
@@ -285,10 +277,9 @@ module test3 (
 
   initial begin
 
-    $dumpfile("waves.vcd");
+    $dumpfile("testOut.vcd");
     $dumpvars;
     #500 $finish;
-
 
   end
 
