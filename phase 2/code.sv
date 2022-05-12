@@ -178,7 +178,7 @@ module top;
 
   initial begin
 
-    $dumpfile("waves.vcd");
+    $dumpfile("out.vcd");
     $dumpvars;
 
   end
@@ -232,6 +232,9 @@ program TestBench (
     tbIntf.clockBlock_tb.init <= 1'b1;
     tbIntf.clockBlock_tb.initialValue <= 3'b111;
 
+    #8
+    tbIntf.clockBlock_tb.init <= 1'b0;
+
     #400
     tbIntf.clockBlock_tb.control <= 2'b10;
     
@@ -239,12 +242,12 @@ program TestBench (
 
 
     property check;
-      @(tbIntf.clockBlock_tb) disable iff (!tbIntf.clockBlock_tb.init) 
+      @(tbIntf.clockBlock_tb.init) 
       tbIntf.clockBlock_tb.counter == tbIntf.clockBlock_tb.initialValue;
     endproperty
 
     myAssertion:
-    assert property (check) $display("SUCCESS");
-    else $display("ERROR");
+    assert property (check) $display("passed");
+    else $display("failed");
 
 endprogram
