@@ -187,7 +187,7 @@ endmodule
 
 
 
-  interface counter_if(input clk);
+interface counter_if(input clk);
 
     parameter COUNTER_SIZE = 2;
     typedef bit [COUNTER_SIZE - 1:0] multiCounter_t;
@@ -214,8 +214,10 @@ endmodule
     modport dut(clocking clockBlock_dut);
     modport tb(clocking clockBlock_tb); 
 
-  endinterface
+endinterface
 
+
+// ! test 3
 program TestBench (
   counter_if.tb tbIntf
 );
@@ -241,13 +243,119 @@ program TestBench (
   end
 
 
-    property check;
-      @(tbIntf.clockBlock_tb.init) 
+    property init_test;
+      @(negedge tbIntf.clockBlock_tb.init) 
       tbIntf.clockBlock_tb.counter == tbIntf.clockBlock_tb.initialValue;
     endproperty
 
-    myAssertion:
-    assert property (check) $display("passed");
+    initAssertion:
+    assert property (init_test) $display("passed");
     else $display("failed");
+
+    property rst_test;
+      @(negedge tbIntf.clockBlock_tb.rst)
+      tbIntf.clockBlock_tb.counter == 0;
+    endproperty
+
+    rstAssertion:
+    assert property (rst_test) $display("passed");
+    else $display("failed");
+
+endprogram
+
+//! test 4
+
+program TestBench (
+  counter_if.tb tbIntf
+);
+
+  // output clk, control, initialValue, init, rst;
+  parameter CYCLE = 8;
+  parameter counterSize = 2;
+  typedef bit [counterSize - 1 : 0] multiCounter_t;
+
+  initial begin
+    tbIntf.clockBlock_tb.rst<= 0;
+    tbIntf.clockBlock_tb.control <= 2'b11;
+    tbIntf.clockBlock_tb.init <= 1'b1;
+    tbIntf.clockBlock_tb.initialValue <= 3'b111;
+
+    #20
+    tbIntf.clockBlock_tb.rst <= 1'b1;
+
+    #20
+    tbIntf.clockBlock_tb.rst <= 1'b0;
+    
+
+    #400
+    tbIntf.clockBlock_tb.control <= 2'b10;
+    
+    
+  end
+    property rst_test;
+      @(negedge tbIntf.clockBlock_tb.rst)
+      tbIntf.clockBlock_tb.counter == 0;
+    endproperty
+
+    rstAssertion:
+    assert property (rst_test) $display("passed");
+    else $display("failed");
+
+
+endprogram
+
+
+
+
+program TestBench_1_2 (
+  counter_if.tb tbIntf
+);
+
+  // output clk, control, initialValue, init, rst;
+  parameter CYCLE = 8;
+  parameter counterSize = 2;
+  typedef bit [counterSize - 1 : 0] multiCounter_t;
+
+
+  initial begin
+    tbIntf.clockBlock_tb.rst<= 0;
+    tbIntf.clockBlock_tb.control <= 2'b01;
+    tbIntf.clockBlock_tb.init <= 1'b1;
+    tbIntf.clockBlock_tb.initialValue <= 3'b011;
+    
+    #210
+    tbIntf.clockBlock_tb.init <= 1'b0;
+    tbIntf.clockBlock_tb.control <= 2'b00;
+
+    #210
+    tbIntf.clockBlock_tb.rst<= 1;
+    #10
+    tbIntf.clockBlock_tb.rst<= 0;
+
+    #20
+    tbIntf.clockBlock_tb.init <= 1'b1;
+    tbIntf.clockBlock_tb.initialValue <= 3'b011;
+    tbIntf.clockBlock_tb.control <= 2'b10;
+   
+  end
+
+
+    property init_test;
+      @(negedge tbIntf.clockBlock_tb.init) 
+      tbIntf.clockBlock_tb.counter == tbIntf.clockBlock_tb.initialValue;
+    endproperty
+
+    initAssertion:
+    assert property (init_test) $display("init_passed");
+    else $display("init_failed");
+
+    property rst_test;
+      @(negedge tbIntf.clockBlock_tb.rst)
+      tbIntf.clockBlock_tb.counter == 0;
+    endproperty
+
+    rstAssertion:
+    assert property (rst_test) $display("rst_passed");
+    else $display("rst_failed");
 
 endprogram
