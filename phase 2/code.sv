@@ -237,10 +237,14 @@ program TestBench (
     
   end
 
-//   initial begin
-//     $dumpfile("waves.vcd");
-//     $dumpvars;
-//     #500 $finish;
-//   end
+
+    property check;
+      @(tbIntf.clockBlock_tb) disable iff (!tbIntf.clockBlock_tb.init) 
+      tbIntf.clockBlock_tb.counter == tbIntf.clockBlock_tb.initialValue;
+    endproperty
+
+    myAssertion:
+    assert property (check) $display("SUCCESS");
+    else $display("ERROR");
 
 endprogram
